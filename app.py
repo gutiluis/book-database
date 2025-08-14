@@ -81,7 +81,7 @@ def clean_price(price_str):
               \n****** PRICE ERROR ******
               \rThe price should be a number without a currency symbol.
               \rEx: 10.99
-              \rPress enter to try again
+              \rPress enter to try again.
               \r*************************''')
     else:
     # convert the number to a float because it has a decimal point in the .csv file
@@ -89,7 +89,30 @@ def clean_price(price_str):
     #print(price_float)
         return int(price_float * 100)  # convert to cents by multiplying by 100
 
+def clean_id(id_str, options):
+    try:
+        book_id = int(id_str)
 
+    except ValueError:
+        input('''
+              \n****** ID ERROR ******
+              \rThe id must be an integer and inside the range.
+              \rPress enter to try again.
+              \r*************************''')
+        return
+    
+    else:
+        if book_id in options:
+            return book_id
+        else:
+            input(f'''
+              \n****** ID ERROR ******
+              \rOptions: {options}
+              \rPress enter to try again.
+              \r*************************''')
+            return
+    
+    
 def add_csv():
     with open("suggested_books.csv") as csvfile:
         data = csv.reader(csvfile)
@@ -141,9 +164,29 @@ def app():
             input("\nPress enter to return to the main menu.")
 
         elif choice == "3":
-            # search books
-            pass
-        elif choice == "4":
+            # search books by id
+            # consider that when an id is deleted, the id is no longer in the db
+            id_options = [] # what is the range for ids in the db?
+            for book in session.query(Book):
+                id_options.append(book.id)
+                # 1, 2, 3, 4, 5
+            id_error = True
+            while id_error:
+                
+                id_choice = input(f"""
+                    \nId Options: {id_options}
+                    \rBook id: """)
+                id_choice = clean_id(id_choice, id_options) # do not exceed the range of ids
+                if type(id_choice) == int: # ids are integers in the db
+                    id_error = False
+            the_book = session.query(Book).filter(Book.id==id_choice).first()
+            print(f"""
+                  \n{the_book.title} by {the_book.author}
+                  \rPublished: {the_book.published_date}
+                  \rPrice:: ${the_book.price / 100}""") # print 10.99 instead of 1099
+            input("\nPress enter to return to the main menu.")
+
+        elif choice == "4":            
             # analysys
             pass
         else:
