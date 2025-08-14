@@ -30,19 +30,11 @@ def clean_date(date_str): # date_str is any parameter variable. self-defined
               "September", "October", "November",
               "December"]
     split_date = date_str.split(" ")
-    
     try:
         month = int(months.index(split_date[0]) + 1) # plus 1 because months are 1-indexed
         day = int(split_date[1].split(",")[0])
         year = int(split_date[2])
         return_date = datetime.date(year, month, day)
-        return return_date
-
-#    except ValueError as identifier:
- #       print("Day is out of range for the month")
-#    except expression as identifier:
-#        print("Date is not in the correct format")
-#        pass
     except ValueError:
         input('''
               \n****** DATE ERROR ******
@@ -51,26 +43,8 @@ def clean_date(date_str): # date_str is any parameter variable. self-defined
               \rPress enter to try again.
               \r*************************''')
         return
-#        pass
     else:
         return return_date
-#        pass
-    
-   # return
-    
-    #print(split_date)
-    # find the index 0 from the months list. which gives a number one less than needed. because lists are zero index
-    month = int(months.index(split_date[0]) + 1) # plus 1 because months are 1-indexed
-#    day = int(split_date[1].split(",")[0])
-    day = int(split_date[1].split(",")[0])
-    year = int(split_date[2])
-    #year = int(split_date[2].split(",")[0])
-    # return a daytime.date object
-    #return datetime.date(year, month, day)
-    #datetime.date()
-   # datetime.date() # year, month, day have to be integers. month variable from above and its value must be all integers. which can be done with a wrapper
-    #print(day)
-    return datetime.date(year, month, day)
 
 
 def clean_price(price_str):
@@ -85,9 +59,9 @@ def clean_price(price_str):
               \r*************************''')
     else:
     # convert the number to a float because it has a decimal point in the .csv file
-
     #print(price_float)
         return int(price_float * 100)  # convert to cents by multiplying by 100
+
 
 def clean_id(id_str, options):
     try:
@@ -100,7 +74,6 @@ def clean_id(id_str, options):
               \rPress enter to try again.
               \r*************************''')
         return
-    
     else:
         if book_id in options:
             return book_id
