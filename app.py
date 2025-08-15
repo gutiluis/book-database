@@ -221,7 +221,20 @@ def app():
                 time.sleep(1.5)
         elif choice == "4":            
             # analysys
-            pass
+            # session.query(Book) returns all of the entries in the db
+            # return first or none. ascending order
+            oldest_book = session.query(Book).order_by(Book.published_date).first()
+            newest_book = session.query(Book).order_by(Book.published_date.desc()).first()
+            total_books = session.query(Book).count()
+            #print(total_books) # total books from the session.query(Book)
+            python_books = session.query(Book).filter(Book.title.like("%Python%")).count()
+            print(f"""
+                  \n***** BOOK ANALYSYS *****
+                  \rOldest Book: {oldest_book.title}
+                  \rNewest Book: {newest_book.title}
+                  \rTotal Books: {total_books}
+                  \rNumber of Python Books: {python_books}""")
+            input("\nPress enter to return to the main menu.")
         else:
             print("Goodbye!")
             app_running = False
