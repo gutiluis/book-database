@@ -22,8 +22,24 @@ def menu():
                   \rEnter 1, 2, 3, 4, or 5.
                   \rPress enter to try again.""")
   
+  
+def submenu():
+    while True:
+        print("""
+              \n1) Edit
+              \r2) Delete
+              \r3) Return to main menu""")
+        choice = input("What would you like to do? ")
+        if choice in ["1", "2", "3"]:
+            return choice
+        else:
+            input("""
+                  \rEnter only one of the options above.
+                  \rEnter 1, 2, or 3.
+                  \rPress enter to try again.""")
 
-def clean_date(date_str): # date_str is any parameter variable. self-defined
+
+def clean_date(date_str):
     # lists are zero indexed.
     months = ["January", "February", "March", "April",
               "May", "June", "July", "August",
@@ -31,7 +47,7 @@ def clean_date(date_str): # date_str is any parameter variable. self-defined
               "December"]
     split_date = date_str.split(" ")
     try:
-        month = int(months.index(split_date[0]) + 1) # plus 1 because months are 1-indexed
+        month = int(months.index(split_date[0]) + 1) # plus 1 because months variable list are 1-indexed
         day = int(split_date[1].split(",")[0])
         year = int(split_date[2])
         return_date = datetime.date(year, month, day)
@@ -84,7 +100,36 @@ def clean_id(id_str, options):
               \rPress enter to try again.
               \r*************************''')
             return
+ 
+ # published_date is related to the clean_date function. to turn the string input into the correct format
+ # price is related to the clean price function. turn the string input into the correct format
+ 
+ 
+ # no author and no title
+def edit_check(column_name, current_value): # get price and published_date in their specific format
+    print(f"\n**** EDIT {column_name} ****")
+    # show the current value for each column
+    if column_name == "Price":
+        print(f"\rCurrent Value: {current_value/100}")
+    elif column_name == "Date":
+        print(f"\rCurrent Value: {current_value.strftime('%B %d, %Y')}")
+    else:
+        print(f"\rCurrent Value: {current_value}") # print remaining columns
     
+    if column_name == "Date" or column_name == "Price":
+        while True:
+            changes = input("What would you like to change the value to? ")
+            if column_name == "Date":
+                changes = clean_date(changes)
+                if type(changes) == datetime.date:
+                    return changes # return automatically stops a loop
+            elif column_name == "Price":
+                changes = clean_price(changes)
+                if type(changes) == int:
+                    return changes
+    else: 
+        return input("What would you like to change the value to? ") # one of the two columns. author or title
+
     
 def add_csv():
     with open("suggested_books.csv") as csvfile:
@@ -157,8 +202,23 @@ def app():
                   \n{the_book.title} by {the_book.author}
                   \rPublished: {the_book.published_date}
                   \rPrice:: ${the_book.price / 100}""") # print 10.99 instead of 1099
-            input("\nPress enter to return to the main menu.")
-
+#            input("\nPress enter to return to the main menu.")
+            sub_choice = submenu()
+            if sub_choice == "1":
+                # edit
+                the_book.title = edit_check("Title", the_book.title) # title is the column name
+                the_book.author = edit_check("Author", the_book.author)
+                the_book.published_date = edit_check("Date", the_book.published_date)
+                the_book.price = edit_check("Price", the_book.price)
+                session.commit()
+                print("Book updated!")
+                time.sleep(1.5)
+            elif sub_choice == "2":
+                # delete
+                session.delete(the_book)
+                session.commit()
+                print("Book deleted")
+                time.sleep(1.5)
         elif choice == "4":            
             # analysys
             pass
