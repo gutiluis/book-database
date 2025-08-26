@@ -22,7 +22,6 @@ def menu():
                   \rEnter 1, 2, 3, 4, or 5.
                   \rPress enter to try again.""")
   
-  
 def submenu():
     while True:
         print("""
@@ -38,16 +37,14 @@ def submenu():
                   \rEnter 1, 2, or 3.
                   \rPress enter to try again.""")
 
-
 def clean_date(date_str):
-    # lists are zero indexed.
     months = ["January", "February", "March", "April",
               "May", "June", "July", "August",
               "September", "October", "November",
               "December"]
     split_date = date_str.split(" ")
     try:
-        month = int(months.index(split_date[0]) + 1) # plus 1 because months variable list are 1-indexed
+        month = int(months.index(split_date[0]) + 1) 
         day = int(split_date[1].split(",")[0])
         year = int(split_date[2])
         return_date = datetime.date(year, month, day)
@@ -62,7 +59,6 @@ def clean_date(date_str):
     else:
         return return_date
 
-
 def clean_price(price_str):
     try:
         price_float = float(price_str)
@@ -74,10 +70,7 @@ def clean_price(price_str):
               \rPress enter to try again.
               \r*************************''')
     else:
-    # convert the number to a float because it has a decimal point in the .csv file
-    #print(price_float)
-        return int(price_float * 100)  # convert to cents by multiplying by 100
-
+        return int(price_float * 100)  
 
 def clean_id(id_str, options):
     try:
@@ -101,20 +94,14 @@ def clean_id(id_str, options):
               \r*************************''')
             return
  
- # published_date is related to the clean_date function. to turn the string input into the correct format
- # price is related to the clean price function. turn the string input into the correct format
- 
- 
- # no author and no title
-def edit_check(column_name, current_value): # get price and published_date in their specific format
+def edit_check(column_name, current_value): 
     print(f"\n**** EDIT {column_name} ****")
-    # show the current value for each column
     if column_name == "Price":
         print(f"\rCurrent Value: {current_value/100}")
     elif column_name == "Date":
         print(f"\rCurrent Value: {current_value.strftime('%B %d, %Y')}")
     else:
-        print(f"\rCurrent Value: {current_value}") # print remaining columns
+        print(f"\rCurrent Value: {current_value}")
     
     if column_name == "Date" or column_name == "Price":
         while True:
@@ -122,25 +109,21 @@ def edit_check(column_name, current_value): # get price and published_date in th
             if column_name == "Date":
                 changes = clean_date(changes)
                 if type(changes) == datetime.date:
-                    return changes # return automatically stops a loop
+                    return changes 
             elif column_name == "Price":
                 changes = clean_price(changes)
                 if type(changes) == int:
                     return changes
     else: 
-        return input("What would you like to change the value to? ") # one of the two columns. author or title
+        return input("What would you like to change the value to? ") 
 
     
 def add_csv():
     with open("suggested_books.csv") as csvfile:
         data = csv.reader(csvfile)
         for row in data:
-            book_in_db = session.query(Book).filter(Book.title==row[0]).one_or_none() # return none if there isnt a book
-            
-            # conditional statement to check if book is still in the db 
-            if book_in_db == None: # must be aware the db has dubplicates
-                
-            #print(row)
+            book_in_db = session.query(Book).filter(Book.title==row[0]).one_or_none() 
+            if book_in_db == None:
                 title = row[0]
                 author = row[1]
                 date = clean_date(row[2])
@@ -154,19 +137,19 @@ def app():
     app_running = True
     while app_running:
         choice = menu()
+      
         if choice == "1":
-            # add book
             title = input("Title: ")
             author = input("Author: ")
-            date_error = True # while date error
+            date_error = True 
             while date_error:
-                date = input('Published Date (Ex: October 25, 2017): ') # date in specific format for the date library/module. all integers
+                date = input('Published Date (Ex: October 25, 2017): ')
                 date = clean_date(date)
                 if type(date) == datetime.date:
                     date_error = False
             price_error = True
             while price_error:
-                price = input("Price: (Ex: 25.64): ") # price in cents
+                price = input("Price: (Ex: 25.64): ") 
                 price = clean_price(price)
                 if type(price) == int:
                     price_error = False
@@ -175,38 +158,33 @@ def app():
             session.commit()
             print("Book was added to the database.")
             time.sleep(1.5)
+          
         elif choice == "2":
-            # view books
             for book in session.query(Book):
                 print(f"{book.id} | {book.title} | {book.author} | {book.published_date} | {book.price}")
             input("\nPress enter to return to the main menu.")
 
         elif choice == "3":
-            # search books by id
-            # consider that when an id is deleted, the id is no longer in the db
-            id_options = [] # what is the range for ids in the db?
+            id_options = [] 
             for book in session.query(Book):
                 id_options.append(book.id)
-                # 1, 2, 3, 4, 5
             id_error = True
             while id_error:
                 
                 id_choice = input(f"""
                     \nId Options: {id_options}
                     \rBook id: """)
-                id_choice = clean_id(id_choice, id_options) # do not exceed the range of ids
-                if type(id_choice) == int: # ids are integers in the db
+                id_choice = clean_id(id_choice, id_options) 
+                if type(id_choice) == int: 
                     id_error = False
             the_book = session.query(Book).filter(Book.id==id_choice).first()
             print(f"""
                   \n{the_book.title} by {the_book.author}
                   \rPublished: {the_book.published_date}
-                  \rPrice:: ${the_book.price / 100}""") # print 10.99 instead of 1099
-#            input("\nPress enter to return to the main menu.")
+                  \rPrice:: ${the_book.price / 100}""") 
             sub_choice = submenu()
             if sub_choice == "1":
-                # edit
-                the_book.title = edit_check("Title", the_book.title) # title is the column name
+                the_book.title = edit_check("Title", the_book.title) 
                 the_book.author = edit_check("Author", the_book.author)
                 the_book.published_date = edit_check("Date", the_book.published_date)
                 the_book.price = edit_check("Price", the_book.price)
@@ -214,19 +192,15 @@ def app():
                 print("Book updated!")
                 time.sleep(1.5)
             elif sub_choice == "2":
-                # delete
                 session.delete(the_book)
                 session.commit()
                 print("Book deleted")
                 time.sleep(1.5)
+              
         elif choice == "4":            
-            # analysys
-            # session.query(Book) returns all of the entries in the db
-            # return first or none. ascending order
             oldest_book = session.query(Book).order_by(Book.published_date).first()
             newest_book = session.query(Book).order_by(Book.published_date.desc()).first()
             total_books = session.query(Book).count()
-            #print(total_books) # total books from the session.query(Book)
             python_books = session.query(Book).filter(Book.title.like("%Python%")).count()
             print(f"""
                   \n***** BOOK ANALYSYS *****
@@ -244,8 +218,5 @@ if __name__ == "__main__":
     Base.metadata.create_all(engine)
     add_csv()
     app()
-    #add_csv()
-    #clean_date("25.64")
-    #clean_price("28.84")
     for book in session.query(Book):
         print(book)
