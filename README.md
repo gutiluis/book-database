@@ -1,4 +1,4 @@
-# sqlalchemy script to buidl a db in sqlite
+# sqlalchemy script to build a db in sqlite
 
 - to run
 - python3 -m venv .venv
