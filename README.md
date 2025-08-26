@@ -1,4 +1,4 @@
-# sqlalchemy script to build a db in sqlite
+# sqlalchemy script to build a db in sqlite with an interactive menu for edition
 
 - to run:
 - python3 -m venv .venv
