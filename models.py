@@ -1,3 +1,9 @@
+#!/usr/bin/env python3
+
+# file: models.py
+# descr:
+
+
 from sqlalchemy import (create_engine, Column, 
                         Integer, String, Date)
 from sqlalchemy.ext.declarative import declarative_base

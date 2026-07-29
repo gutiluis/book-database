@@ -1,3 +1,8 @@
+#!/usr/bin/env python3
+
+# file: app.py
+# descr:
+
 from models import (Base, session, 
                     Book, engine)
 import datetime

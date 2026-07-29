@@ -1,31 +1,48 @@
+>[!WARNING]
+>CURRENTLY UNDER DEVELOPMENT
+
+# Inventory bookstore with SQLAlchemy
+
+sqlalchemy script to build a db in sqlite with an interactive menu for edition
+
+---
+
 ## How it works:
 
-# sqlalchemy script to build a db in sqlite with an interactive menu for edition
-- python3 -m venv .venv
-- source .venv/bin/activate
-- pip install -r requirements.txt
-- python3 app.py
+```
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+python3 app.py
+```
 
-----
+---
 
-## Features:
+## Features
 
-----
+---
 
-## Technologies Used:
+## Tech-Stack
 
 - Python
 - SQLAlchemy
+- sqlite
 
------
+---
 
-##
+## Contributing
 
-## What I Learned:
+If you are interested in reporting/fixing issues and contributing directly to the code base, please see CONTRIBUTING.md for more information on what we're looking for and how to get started.
 
-----
+---
 
-##
+## Community
 
-clone Repo:
-git clone http://gutiluis/book-database.git
+Info on reporting bugs, getting help, finding third-party tools and sample apps,
+and more can be found on the Community Page.
+
+---
+
+## License
+
+[MIT LICENSE](LICENSE)
